@@ -1,0 +1,93 @@
+<html>
+<script type="text/javascript" src=http://codecha.org/api/challenge?k=b17be336f74e40389c37db1fcfae62a4></script>
+<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+<script>
+ google.load('visualization', '1', {packages:['gauge']});
+ time=0;
+ score=0;
+ function grtCookie(){
+   if(document.referrer!=document.URL)
+     document.cookie="codecha=0";
+   var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf("codecha=") == 0) {
+          cval=c.substring(8, c.length);
+          if(cval.length>0){
+           document.getElementById('score').innerHTML="<p>Score is "+cval+"</p>"
+           score=parseInt(cval);
+         
+           return true;
+          }
+         }
+    }
+    document.getElementById('score').innerHTML="<p>Score is 0</p>";
+    return true;
+}
+ function failure(){
+  fbscript= "<div id=\"fb-root\"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = \"//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=414799521927835&version=v2.0\";  fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));<\/script>"
+
+  fbshare="<div class=\"fb-share-button\" data-href=\"http://code.eskratch.com\" data-type=\"button_count\"><\/div>"
+  document.open();
+  document.write("<html><body>"+fbscript+"\nOops Time Out.Your Score is "+score+"<br/>\n"+fbshare+"</body></html>");
+  document.close();
+ }
+ function  scripti(){
+    if(time==60){
+     document.cookie="codecha="
+     failure();
+    }
+    else {
+      time+=1
+      val=document.getElementById('codecha_response_field').value;
+      drawChart();
+      if (val.length>2){
+       score+=1;
+       document.cookie = "codecha=" + score;
+       location.replace("/codecha.html");
+      }
+      else{
+       setTimeout(scripti,1000);
+      }
+     }
+ 
+    
+  }
+  function start() {
+  scripti();
+  grtCookie();
+}
+window.onload = start;
+ google.setOnLoadCallback(drawChart);
+ function drawChart() {
+ var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Time', time]
+          
+        ]);
+
+ var options = {
+          width: 400, height: 120,
+          redFrom: 50, redTo: 60,
+          yellowFrom:75, yellowTo: 90,
+          minorTicks: 5,
+          max:60
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+</script>
+ <body > 
+ <table>
+ <tr>
+  <td>
+   <div id='score'></div>
+  </td>
+  <td>
+    <div id='chart_div' float:left></div>
+  </td>
+ </tr>
+ </table>
+  </body> 
+</html>
